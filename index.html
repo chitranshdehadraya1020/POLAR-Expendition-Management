@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MoES | Polar Expedition Management System</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-slate-950 text-white">
+
+<div class="flex min-h-screen">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside id="sidebar"
+           class="sidebar w-64 bg-slate-900 border-r border-slate-800">
+
+        <div class="p-5 border-b border-slate-800">
+
+            <div class="flex items-center gap-3">
+
+                <div class="logo">
+                    <i class="fa-solid fa-snowflake"></i>
+                </div>
+
+                <div>
+                    <h1 class="font-bold text-lg">POLAR COMMAND</h1>
+                    <p class="text-xs text-slate-400">MoES Expedition System</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="p-4 space-y-2">
+
+            <button class="nav-item active"
+                    onclick="showPage('dashboard', this)">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </button>
+
+            <button class="nav-item"
+                    onclick="showPage('expeditions', this)">
+                <i class="fa-solid fa-compass"></i>
+                Expeditions
+            </button>
+
+            <button class="nav-item"
+                    onclick="showPage('assets', this)">
+                <i class="fa-solid fa-truck"></i>
+                Assets
+            </button>
+
+            <button class="nav-item"
+                    onclick="showPage('inventory', this)">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                Inventory
+            </button>
+
+            <button class="nav-item"
+                    onclick="showPage('personnel', this)">
+                <i class="fa-solid fa-users"></i>
+                Personnel
+            </button>
+
+            <button class="nav-item"
+                    onclick="showPage('tracking', this)">
+                <i class="fa-solid fa-location-dot"></i>
+                Live Tracking
+            </button>
+
+            <button class="nav-item"
+                    onclick="showPage('alerts', this)">
+                <i class="fa-solid fa-bell"></i>
+                Alerts
+                <span class="notification-count">4</span>
+            </button>
+
+        </nav>
+
+
+        <!-- System status -->
+
+        <div class="absolute bottom-5 left-4 right-4">
+
+            <div class="bg-slate-800 rounded-xl p-4">
+
+                <div class="flex items-center gap-2">
+
+                    <span class="online-dot"></span>
+
+                    <span class="text-sm">
+                        System Operational
+                    </span>
+
+                </div>
+
+                <p class="text-xs text-slate-500 mt-2">
+                    Last synchronized: Just now
+                </p>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="flex-1 overflow-x-hidden">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="flex items-center gap-4">
+
+                <button onclick="toggleSidebar()"
+                        class="mobile-menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div>
+                    <h2 id="pageTitle"
+                        class="text-xl font-bold">
+                        Mission Dashboard
+                    </h2>
+
+                    <p class="text-xs text-slate-400">
+                        Integrated Polar Expedition Logistics & Asset Management
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="flex items-center gap-5">
+
+                <!-- Search -->
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-search"></i>
+
+                    <input type="text"
+                           id="globalSearch"
+                           placeholder="Search..."
+                           onkeyup="globalSearch()">
+
+                </div>
+
+
+                <!-- Notification -->
+
+                <button class="icon-button"
+                        onclick="showPage('alerts')">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    <span class="notification-badge">
+                        4
+                    </span>
+
+                </button>
+
+
+                <!-- Profile -->
+
+                <div class="flex items-center gap-3">
+
+                    <div class="avatar">
+                        AD
+                    </div>
+
+                    <div class="hidden md:block">
+
+                        <p class="text-sm font-semibold">
+                            Administrator
+                        </p>
+
+                        <p class="text-xs text-slate-500">
+                            MoES Control Center
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <section class="p-6">
+
+
+            <!-- ================================================= -->
+            <!-- DASHBOARD -->
+            <!-- ================================================= -->
+
+            <div id="dashboard" class="page">
+
+                <!-- Welcome -->
+
+                <div class="mission-banner mb-6">
+
+                    <div>
+
+                        <p class="text-cyan-300 text-sm font-semibold">
+                            MINISTRY OF EARTH SCIENCES
+                        </p>
+
+                        <h1 class="text-3xl font-bold mt-1">
+                            Polar Expedition Command Center
+                        </h1>
+
+                        <p class="text-slate-300 mt-2">
+                            Monitor expeditions, personnel, assets and
+                            logistics from one centralized platform.
+                        </p>
+
+                    </div>
+
+                    <div class="ice-icon">
+                        ❄️
+                    </div>
+
+                </div>
+
+
+                <!-- STAT CARDS -->
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-6">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon blue">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+
+                        <div>
+                            <p>Active Expeditions</p>
+                            <h3>04</h3>
+                            <span class="green-text">
+                                +1 this month
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon purple">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                        <div>
+                            <p>Personnel Deployed</p>
+                            <h3>86</h3>
+                            <span class="green-text">
+                                All teams accounted
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon cyan">
+                            <i class="fa-solid fa-satellite"></i>
+                        </div>
+
+                        <div>
+                            <p>Total Assets</p>
+                            <h3>142</h3>
+                            <span class="green-text">
+                                91% operational
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon red">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+
+                        <div>
+                            <p>Active Alerts</p>
+                            <h3>08</h3>
+                            <span class="red-text">
+                                2 critical
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MAP + INVENTORY -->
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+
+                    <!-- MAP -->
+
+                    <div class="dashboard-card xl:col-span-2">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h3>Expedition Tracking</h3>
+                                <p>Live mission locations</p>
+                            </div>
+
+                            <button class="small-button"
+                                    onclick="showPage('tracking')">
+                                View Full Map
+                            </button>
+
+                        </div>
+
+                        <div class="polar-map">
+
+                            <div class="map-grid"></div>
+
+                            <div class="continent">
+                                ANTARCTICA
+                            </div>
+
+                            <div class="map-marker marker-1">
+                                <span></span>
+                                EXP-001
+                            </div>
+
+                            <div class="map-marker marker-2">
+                                <span></span>
+                                EXP-002
+                            </div>
+
+                            <div class="map-marker marker-3">
+                                <span></span>
+                                MAITRI
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INVENTORY -->
+
+                    <div class="dashboard-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h3>Inventory Status</h3>
+                                <p>Current stock levels</p>
+                            </div>
+
+                            <i class="fa-solid fa-boxes-stacked text-cyan-400"></i>
+
+                        </div>
+
+
+                        <div class="space-y-6 mt-6">
+
+                            <div>
+
+                                <div class="flex justify-between mb-2">
+                                    <span>Fuel</span>
+                                    <span>82%</span>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="progress-bar bg-cyan-400"
+                                         style="width:82%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="flex justify-between mb-2">
+                                    <span>Food Supplies</span>
+                                    <span>74%</span>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="progress-bar bg-green-400"
+                                         style="width:74%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="flex justify-between mb-2">
+                                    <span>Medical Supplies</span>
+                                    <span>61%</span>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="progress-bar bg-yellow-400"
+                                         style="width:61%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="flex justify-between mb-2">
+                                    <span>Equipment</span>
+                                    <span>91%</span>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="progress-bar bg-purple-400"
+                                         style="width:91%">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHART + ALERTS -->
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+
+                    <div class="dashboard-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h3>Logistics Consumption</h3>
+                                <p>Last 7 days</p>
+                            </div>
+
+                        </div>
+
+                        <canvas id="logisticsChart"></canvas>
+
+                    </div>
+
+
+                    <div class="dashboard-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h3>Recent Alerts</h3>
+                                <p>Latest system notifications</p>
+                            </div>
+
+                            <button class="small-button"
+                                    onclick="showPage('alerts')">
+                                View All
+                            </button>
+
+                        </div>
+
+
+                        <div class="alert-list">
+
+                            <div class="alert-item critical">
+
+                                <div class="alert-symbol">
+                                    !
+                                </div>
+
+                                <div>
+                                    <h4>Extreme Weather Warning</h4>
+                                    <p>EXP-001 • Antarctica</p>
+                                </div>
+
+                                <span>10m</span>
+
+                            </div>
+
+
+                            <div class="alert-item warning">
+
+                                <div class="alert-symbol">
+                                    ⚠
+                                </div>
+
+                                <div>
+                                    <h4>Low Medical Supplies</h4>
+                                    <p>MAITRI Station</p>
+                                </div>
+
+                                <span>32m</span>
+
+                            </div>
+
+
+                            <div class="alert-item info">
+
+                                <div class="alert-symbol">
+                                    i
+                                </div>
+
+                                <div>
+                                    <h4>Vehicle Maintenance Due</h4>
+                                    <p>Polar Vehicle PV-017</p>
+                                </div>
+
+                                <span>1h</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EXPEDITIONS -->
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Active Expeditions</h3>
+                            <p>Current missions</p>
+                        </div>
+
+                        <button class="primary-button"
+                                onclick="showPage('expeditions')">
+                            + New Expedition
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                            <tr>
+                                <th>Expedition ID</th>
+                                <th>Region</th>
+                                <th>Team</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr>
+
+                                <td class="font-semibold">
+                                    EXP-001
+                                </td>
+
+                                <td>
+                                    Antarctica
+                                </td>
+
+                                <td>
+                                    24 Personnel
+                                </td>
+
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="mini-progress">
+                                            <div style="width:76%"></div>
+                                        </div>
+                                        76%
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <button class="action-button"
+                                            onclick="viewExpedition('EXP-001')">
+                                        View
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="font-semibold">
+                                    EXP-002
+                                </td>
+
+                                <td>
+                                    Arctic
+                                </td>
+
+                                <td>
+                                    18 Personnel
+                                </td>
+
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="mini-progress">
+                                            <div style="width:52%"></div>
+                                        </div>
+                                        52%
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="status planning">
+                                        Planning
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <button class="action-button">
+                                        View
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="font-semibold">
+                                    EXP-003
+                                </td>
+
+                                <td>
+                                    Antarctica
+                                </td>
+
+                                <td>
+                                    21 Personnel
+                                </td>
+
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="mini-progress">
+                                            <div style="width:91%"></div>
+                                        </div>
+                                        91%
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <button class="action-button">
+                                        View
+                                    </button>
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- EXPEDITIONS PAGE -->
+            <!-- ================================================= -->
+
+            <div id="expeditions"
+                 class="page hidden">
+
+                <div class="page-heading">
+
+                    <div>
+                        <h1>Expedition Management</h1>
+                        <p>Manage and monitor polar missions</p>
+                    </div>
+
+                    <button class="primary-button"
+                            onclick="openModal()">
+                        <i class="fa-solid fa-plus"></i>
+                        Create Expedition
+                    </button>
+
+                </div>
+
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+                        <div>
+                            <p>Total Expeditions</p>
+                            <h3>12</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div>
+                            <p>Active</p>
+                            <h3>04</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon yellow">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <p>Planning</p>
+                            <h3>03</h3>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <h3>All Expeditions</h3>
+
+                        <select class="dark-input"
+                                onchange="filterExpeditions(this.value)">
+
+                            <option value="all">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Planning">Planning</option>
+                            <option value="Completed">Completed</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table id="expeditionTable">
+
+                            <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Mission Name</th>
+                                <th>Region</th>
+                                <th>Leader</th>
+                                <th>Start Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr data-status="Active">
+                                <td>EXP-001</td>
+                                <td>Antarctic Research 2026</td>
+                                <td>Antarctica</td>
+                                <td>Dr. Rajiv Sharma</td>
+                                <td>12 Aug 2026</td>
+                                <td>
+                                    <span class="status active">Active</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="Planning">
+                                <td>EXP-002</td>
+                                <td>Arctic Climate Study</td>
+                                <td>Arctic</td>
+                                <td>Dr. Ananya Rao</td>
+                                <td>10 Oct 2026</td>
+                                <td>
+                                    <span class="status planning">Planning</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="Active">
+                                <td>EXP-003</td>
+                                <td>Ice Core Research</td>
+                                <td>Antarctica</td>
+                                <td>Dr. Vikram Singh</td>
+                                <td>02 Jul 2026</td>
+                                <td>
+                                    <span class="status active">Active</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="Completed">
+                                <td>EXP-004</td>
+                                <td>Ocean Observation Mission</td>
+                                <td>Southern Ocean</td>
+                                <td>Dr. Priya Mehta</td>
+                                <td>15 Jan 2026</td>
+                                <td>
+                                    <span class="status completed">Completed</span>
+                                </td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- ASSETS -->
+            <!-- ================================================= -->
+
+            <div id="assets"
+                 class="page hidden">
+
+                <div class="page-heading">
+
+                    <div>
+                        <h1>Asset Management</h1>
+                        <p>Track scientific and logistics equipment</p>
+                    </div>
+
+                    <button class="primary-button">
+                        + Register Asset
+                    </button>
+
+                </div>
+
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
+
+                    <div class="stat-card">
+                        <div class="stat-icon cyan">
+                            <i class="fa-solid fa-box"></i>
+                        </div>
+                        <div>
+                            <p>Total Assets</p>
+                            <h3>142</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div>
+                            <p>Operational</p>
+                            <h3>129</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon yellow">
+                            <i class="fa-solid fa-wrench"></i>
+                        </div>
+                        <div>
+                            <p>Maintenance</p>
+                            <h3>09</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </div>
+                        <div>
+                            <p>Damaged</p>
+                            <h3>04</h3>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <h3>Asset Inventory</h3>
+
+                        <input type="text"
+                               class="dark-input"
+                               placeholder="Search asset..."
+                               onkeyup="searchTable(this, 'assetTable')">
+
+                    </div>
+
+
+                    <div class="table-container">
+
+                        <table id="assetTable">
+
+                            <thead>
+
+                            <tr>
+                                <th>Asset ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Condition</th>
+                                <th>Status</th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr>
+                                <td>AST-001</td>
+                                <td>Polar Vehicle PV-017</td>
+                                <td>Vehicle</td>
+                                <td>Antarctica</td>
+                                <td>Good</td>
+                                <td>
+                                    <span class="status active">Operational</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>AST-002</td>
+                                <td>Ice Core Drill</td>
+                                <td>Scientific</td>
+                                <td>MAITRI</td>
+                                <td>Excellent</td>
+                                <td>
+                                    <span class="status active">Operational</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>AST-003</td>
+                                <td>Satellite Communication Unit</td>
+                                <td>Communication</td>
+                                <td>BHARATI</td>
+                                <td>Good</td>
+                                <td>
+                                    <span class="status active">Operational</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>AST-004</td>
+                                <td>Snowmobile SM-12</td>
+                                <td>Vehicle</td>
+                                <td>Antarctica</td>
+                                <td>Service Due</td>
+                                <td>
+                                    <span class="status planning">
+                                        Maintenance
+                                    </span>
+                                </td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- INVENTORY -->
+            <!-- ================================================= -->
+
+            <div id="inventory"
+                 class="page hidden">
+
+                <div class="page-heading">
+
+                    <div>
+                        <h1>Inventory & Logistics</h1>
+                        <p>Monitor supplies across polar stations</p>
+                    </div>
+
+                    <button class="primary-button">
+                        + Add Inventory
+                    </button>
+
+                </div>
+
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
+
+                    <div class="stat-card">
+                        <div class="stat-icon cyan">
+                            <i class="fa-solid fa-gas-pump"></i>
+                        </div>
+                        <div>
+                            <p>Fuel</p>
+                            <h3>82%</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <div>
+                            <p>Food</p>
+                            <h3>74%</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fa-solid fa-kit-medical"></i>
+                        </div>
+                        <div>
+                            <p>Medical</p>
+                            <h3>61%</h3>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fa-solid fa-microscope"></i>
+                        </div>
+                        <div>
+                            <p>Equipment</p>
+                            <h3>91%</h3>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <h3 class="text-lg font-semibold mb-5">
+                        Supply Status
+                    </h3>
+
+                    <div class="space-y-6">
+
+                        <div class="inventory-row">
+
+                            <div class="inventory-info">
+                                <div class="inventory-icon fuel">
+                                    <i class="fa-solid fa-gas-pump"></i>
+                                </div>
+
+                                <div>
+                                    <h4>Diesel Fuel</h4>
+                                    <p>
+
+                                        <script src="polar.js"></script>
