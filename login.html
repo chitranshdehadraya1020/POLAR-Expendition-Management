@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — Wallet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+  <div class="auth-card">
+    <div class="brand-mark auth-brand"><span class="dot"></span>Wallet</div>
+    <h1>Welcome back</h1>
+    <p class="auth-sub">Sign in to see your accounts, budgets and goals.</p>
+
+    <form id="loginForm" class="auth-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password">
+        <div class="field-hint"><a href="{{ url_for('forgot_password_page') }}">Forgot your password?</a></div>
+      </div>
+      <div class="auth-error" id="authError" style="display:none;"></div>
+      <button type="submit" class="btn" style="width:100%;">Sign in</button>
+    </form>
+
+    <p class="auth-switch">New here? <a href="{{ url_for('signup_page') }}">Create an account</a></p>
+  </div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errBox = document.getElementById('authError');
+  errBox.style.display = 'none';
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value
+    })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    errBox.textContent = data.error || 'Something went wrong.';
+    errBox.style.display = 'block';
+    return;
+  }
+  window.location.href = data.redirect || '/';
+});
+</script>
+</body>
+</html>
